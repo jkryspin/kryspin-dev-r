@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 30th Birthday Kathryn! 🎉</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .birthday-header {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+
+        .birthday-header h1 {
+            font-size: 3rem;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .birthday-date {
+            font-size: 1.5rem;
+            color: #fff;
+            opacity: 0.9;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .memory-card {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .memory-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .memory-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .memory-card.matched {
+            background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+            transform: scale(1.1);
+            border-color: #4ecdc4;
+        }
+
+        .memory-card.matched .card-front {
+            display: none;
+        }
+
+        .memory-card.matched .card-back {
+            transform: rotateY(0deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+        }
+
+        .card-front {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .card-back {
+            background: linear-gradient(45deg, #ff6b6b, #ffa726);
+            transform: rotateY(180deg);
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        .game-stats {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .reset-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ffa726);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .present-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            display: none;
+            animation: presentReveal 1s ease-in-out;
+        }
+
+        .present-container.show {
+            display: block;
+        }
+
+        @keyframes presentReveal {
+            0% { opacity: 0; transform: scale(0.8) rotate(-5deg); }
+            50% { transform: scale(1.1) rotate(2deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        .present-title {
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .present-content {
+            font-size: 1.3rem;
+            color: #fff;
+            line-height: 1.6;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .floating-balloons {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .balloon {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .balloon:nth-child(1) { left: 10%; animation-delay: 0s; color: #ff6b6b; }
+        .balloon:nth-child(2) { left: 20%; animation-delay: 1s; color: #4ecdc4; }
+        .balloon:nth-child(3) { left: 30%; animation-delay: 2s; color: #45b7d1; }
+        .balloon:nth-child(4) { left: 40%; animation-delay: 3s; color: #96ceb4; }
+        .balloon:nth-child(5) { left: 50%; animation-delay: 4s; color: #ffeaa7; }
+        .balloon:nth-child(6) { left: 60%; animation-delay: 5s; color: #fd79a8; }
+        .balloon:nth-child(7) { left: 70%; animation-delay: 0.5s; color: #fdcb6e; }
+        .balloon:nth-child(8) { left: 80%; animation-delay: 1.5s; color: #6c5ce7; }
+        .balloon:nth-child(9) { left: 90%; animation-delay: 2.5s; color: #a29bfe; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); }
+            50% { transform: translateY(-100px) rotate(180deg); }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .sparkles {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            animation: sparkle 2s ease-in-out infinite;
+            z-index: 5;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .cake-emoji {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            animation: bounce 2s ease-in-out infinite;
+            z-index: 5;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-20px); }
+        }
+
+        @media (max-width: 768px) {
+            .birthday-header h1 {
+                font-size: 2rem;
+            }
+            
+            .memory-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .memory-card {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-balloons">
+        <div class="balloon">🎈</div>
+        <div class="balloon">🎈</div>
+        <div class="balloon">🎈</div>
+        <div class="balloon">🎈</div>
+        <div class="balloon">🎈</div>
+        <div class="balloon">🎈</div>
+        <div class="balloon">🎈</div>
+        <div class="balloon">🎈</div>
+        <div class="balloon">🎈</div>
+    </div>
+
+    <div class="sparkles">✨</div>
+    <div class="cake-emoji">🎂</div>
+
+    <div class="container">
+        <div class="birthday-header">
+            <h1>Happy 30th Birthday Kathryn! 🎉</h1>
+            <p class="birthday-date">July 7th, 2025</p>
+        </div>
+
+        <div class="game-container">
+            <h2 class="game-title">🧠 Memory Match Challenge</h2>
+            <div class="game-stats">
+                <span>Matches: <span id="matches">0/8</span></span>
+                <span>Moves: <span id="moves">0</span></span>
+            </div>
+            <div class="memory-grid" id="memoryGrid">
+                <!-- Cards will be generated by JavaScript -->
+            </div>
+            <button class="reset-btn" onclick="resetGame()">Reset Game</button>
+        </div>
+
+        <div class="present-container" id="presentContainer">
+            <h2 class="present-title">🎁 Surprise Present!</h2>
+            <div class="present-content">
+                <p><strong>Beach day at Silver Lake</strong></p>
+                <p>Hope you have an amazing 30th birthday celebration! 🏖️☀️</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const gameEmojis = ['🎂', '🎈', '🎉', '🎁', '🌟', '💖', '🎊', '🥳'];
+        let gameCards = [...gameEmojis, ...gameEmojis];
+        let flippedCards = [];
+        let matchedPairs = 0;
+        let moves = 0;
+        let gameActive = true;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function createMemoryGrid() {
+            const grid = document.getElementById('memoryGrid');
+            grid.innerHTML = '';
+            shuffleArray(gameCards);
+            
+            gameCards.forEach((emoji, index) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+                card.dataset.emoji = emoji;
+                card.dataset.index = index;
+                card.innerHTML = `
+                    <div class="card-front">?</div>
+                    <div class="card-back">${emoji}</div>
+                `;
+                card.addEventListener('click', flipCard);
+                grid.appendChild(card);
+            });
+        }
+
+        function flipCard() {
+            if (!gameActive || this.classList.contains('flipped') || this.classList.contains('matched')) {
+                return;
+            }
+
+            if (flippedCards.length < 2) {
+                this.classList.add('flipped');
+                flippedCards.push(this);
+
+                if (flippedCards.length === 2) {
+                    moves++;
+                    document.getElementById('moves').textContent = moves;
+                    setTimeout(checkMatch, 1000);
+                }
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            const emoji1 = card1.dataset.emoji;
+            const emoji2 = card2.dataset.emoji;
+
+            if (emoji1 === emoji2) {
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                matchedPairs++;
+                document.getElementById('matches').textContent = `${matchedPairs}/8`;
+
+                if (matchedPairs === 8) {
+                    setTimeout(() => {
+                        document.getElementById('presentContainer').classList.add('show');
+                        createConfetti();
+                    }, 500);
+                }
+            } else {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+            }
+
+            flippedCards = [];
+        }
+
+        function resetGame() {
+            gameActive = true;
+            flippedCards = [];
+            matchedPairs = 0;
+            moves = 0;
+            document.getElementById('matches').textContent = '0/8';
+            document.getElementById('moves').textContent = '0';
+            document.getElementById('presentContainer').classList.remove('show');
+            createMemoryGrid();
+        }
+
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#fd79a8'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animation = `confettiFall ${Math.random() * 4 + 2}s linear infinite`;
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(confetti);
+
+                setTimeout(() => {
+                    confetti.remove();
+                }, 6000);
+            }
+        }
+
+        // Add confetti animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes confettiFall {
+                0% { transform: translateY(-100vh) rotate(0deg); }
+                100% { transform: translateY(100vh) rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize game
+        createMemoryGrid();
+        createConfetti();
+    </script>
+</body>
+</html>

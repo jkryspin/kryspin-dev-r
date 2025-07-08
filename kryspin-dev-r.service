@@ -1,0 +1,17 @@
+[Unit]
+Description=Kryspin Dev R Node.js Application
+After=network.target
+
+[Service]
+Type=simple
+User=jkryspin
+WorkingDirectory=/home/jkryspin/kryspin-dev-r
+ExecStart=/usr/bin/node index.js
+Environment=NODE_ENV=production
+Environment=PORT=3333
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF < /dev/null

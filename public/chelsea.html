@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Chelsea! 🎉</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .birthday-container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            max-width: 600px;
+            margin: 2rem;
+        }
+
+        .birthday-title {
+            font-size: 3rem;
+            color: #e74c3c;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .birthday-date {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            font-weight: bold;
+        }
+
+        .birthday-message {
+            font-size: 1.2rem;
+            color: #34495e;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .balloon {
+            position: absolute;
+            width: 50px;
+            height: 70px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .balloon:nth-child(1) {
+            background: #e74c3c;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .balloon:nth-child(2) {
+            background: #f39c12;
+            left: 20%;
+            animation-delay: 1s;
+        }
+
+        .balloon:nth-child(3) {
+            background: #27ae60;
+            right: 20%;
+            animation-delay: 2s;
+        }
+
+        .balloon:nth-child(4) {
+            background: #3498db;
+            right: 10%;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f39c12;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        .confetti:nth-child(odd) {
+            background: #e74c3c;
+            animation-delay: 0.5s;
+        }
+
+        .confetti:nth-child(3n) {
+            background: #27ae60;
+            animation-delay: 1s;
+        }
+
+        .confetti:nth-child(4n) {
+            background: #3498db;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .cake {
+            font-size: 4rem;
+            margin: 1rem 0;
+            animation: cakeGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes cakeGlow {
+            0% { transform: scale(1); filter: brightness(1); }
+            100% { transform: scale(1.1); filter: brightness(1.2); }
+        }
+
+        .party-text {
+            font-size: 2rem;
+            color: #e74c3c;
+            margin-top: 1rem;
+            animation: partyPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes partyPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .stars {
+            position: absolute;
+            font-size: 2rem;
+            color: #f39c12;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        .stars:nth-child(1) { top: 10%; left: 15%; animation-delay: 0s; }
+        .stars:nth-child(2) { top: 20%; right: 15%; animation-delay: 0.5s; }
+        .stars:nth-child(3) { bottom: 30%; left: 10%; animation-delay: 1s; }
+        .stars:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 1.5s; }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .bouncing-ball {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            background-image: url('chelsea.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 50%;
+            cursor: pointer;
+            animation: ballBounce 2s ease-in-out infinite;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.1s ease;
+            z-index: 1000;
+            border: 2px solid #ff6b6b;
+        }
+
+        .bouncing-ball:hover {
+            transform: scale(1.1);
+        }
+
+        .bouncing-ball:active {
+            transform: scale(0.9);
+        }
+
+        @keyframes ballBounce {
+            0%, 100% {
+                transform: translateY(0px);
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+            50% {
+                transform: translateY(-30px);
+                animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+            }
+        }
+
+        .click-counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #e74c3c;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+        }
+
+        .present {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(255, 255, 255, 0.98);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 500px;
+            z-index: 1002;
+            border: 3px solid #e74c3c;
+            animation: presentReveal 0.5s ease-out forwards;
+        }
+
+        @keyframes presentReveal {
+            0% {
+                transform: translate(-50%, -50%) scale(0) rotate(180deg);
+                opacity: 0;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .present-title {
+            font-size: 2rem;
+            color: #e74c3c;
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        .present-content {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .present-emoji {
+            font-size: 3rem;
+            margin: 1rem 0;
+            animation: cakeGlow 2s ease-in-out infinite alternate;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="balloon"></div>
+    <div class="balloon"></div>
+    <div class="balloon"></div>
+    <div class="balloon"></div>
+    
+    <div class="stars">✨</div>
+    <div class="stars">⭐</div>
+    <div class="stars">✨</div>
+    <div class="stars">⭐</div>
+    
+    <div class="click-counter">
+        Ball Clicks: <span id="clickCount">0</span>/20
+    </div>
+    
+    <div class="bouncing-ball" id="bouncingBall"></div>
+    
+    <div class="present hidden" id="present">
+        <div class="present-title">🎁 Surprise Present! 🎁</div>
+        <div class="present-emoji">💰</div>
+        <div class="present-content">
+            <strong>$100 for Donkey Kong Bananza + whatever lol</strong>
+        </div>
+        <div style="margin-top: 1rem; font-size: 1.1rem; color: #27ae60;">
+            You found the secret birthday surprise! 🎉
+        </div>
+    </div>
+    
+    <div class="birthday-container">
+        <h1 class="birthday-title">Happy Birthday Chelsea!</h1>
+        <p class="birthday-date">July 8th, 2025</p>
+        <div class="cake">🎂</div>
+        <p class="birthday-message">
+            Wishing you a day filled with happiness, love, and all your favorite things! 
+            May this new year of life bring you countless blessings, amazing adventures, 
+            and beautiful memories. You deserve all the joy in the world! 🎈
+        </p>
+        <div class="party-text">🎉 Let's Celebrate! 🎉</div>
+    </div>
+
+    <script>
+        let clickCount = 0;
+        let ballPosition = { x: 0, y: 0 };
+        
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+
+        function moveBall() {
+            const ball = document.getElementById('bouncingBall');
+            const maxX = window.innerWidth - 60;
+            const maxY = window.innerHeight - 60;
+            
+            ballPosition.x = Math.random() * maxX;
+            ballPosition.y = Math.random() * maxY;
+            
+            ball.style.left = ballPosition.x + 'px';
+            ball.style.top = ballPosition.y + 'px';
+        }
+
+        function handleBallClick() {
+            clickCount++;
+            document.getElementById('clickCount').textContent = clickCount;
+            
+            createConfetti();
+            
+            if (clickCount >= 20) {
+                document.getElementById('present').classList.remove('hidden');
+                document.getElementById('bouncingBall').style.display = 'none';
+                
+                setTimeout(() => {
+                    createConfetti();
+                }, 500);
+            } else {
+                moveBall();
+            }
+        }
+
+        document.getElementById('bouncingBall').addEventListener('click', handleBallClick);
+        
+        moveBall();
+        setInterval(moveBall, 3000);
+
+        createConfetti();
+        setInterval(createConfetti, 3000);
+
+        document.addEventListener('click', (e) => {
+            if (e.target.id !== 'bouncingBall') {
+                createConfetti();
+            }
+        });
+    </script>
+</body>
+</html>
