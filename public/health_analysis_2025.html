@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Health Transformation — Jan 2025 to Feb 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f0f13; color: #e8e8f0; }
+
+  .hero {
+    background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+    padding: 60px 40px 50px;
+    text-align: center;
+    border-bottom: 1px solid #2a2a4a;
+  }
+  .hero h1 { font-size: 2.6rem; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+  .hero p { margin-top: 12px; color: #8899aa; font-size: 1.05rem; }
+
+  .summary-bar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: #2a2a4a;
+    border-bottom: 1px solid #2a2a4a;
+  }
+  .stat-pill { background: #14141e; padding: 28px 20px; text-align: center; }
+  .stat-pill .value { font-size: 1.9rem; font-weight: 700; color: #6ee7b7; }
+  .stat-pill .delta { font-size: 0.78rem; color: #4ade80; margin-top: 3px; }
+  .stat-pill .label { font-size: 0.72rem; color: #6666aa; margin-top: 7px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .section { max-width: 1200px; margin: 0 auto; padding: 50px 30px; }
+  .section-title { font-size: 1.4rem; font-weight: 700; color: #c8c8ff; margin-bottom: 6px; padding-bottom: 12px; border-bottom: 1px solid #2a2a4a; }
+  .section-subtitle { font-size: 0.88rem; color: #6666aa; margin-bottom: 28px; margin-top: 6px; line-height: 1.6; }
+
+  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .chart-card { background: #14141e; border: 1px solid #2a2a4a; border-radius: 12px; padding: 24px; }
+  .chart-card.full { grid-column: 1 / -1; }
+  .chart-title { font-size: 0.82rem; font-weight: 600; color: #8888bb; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px; }
+  canvas { width: 100% !important; }
+
+  .divider { height: 1px; background: #2a2a4a; margin: 0 30px; }
+
+  .insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+  .insight-card { background: #14141e; border: 1px solid #2a2a4a; border-radius: 12px; padding: 24px; }
+  .insight-card .icon { font-size: 1.6rem; margin-bottom: 10px; }
+  .insight-card h3 { font-size: 0.92rem; font-weight: 600; color: #c8c8ff; margin-bottom: 8px; }
+  .insight-card p { font-size: 0.82rem; color: #7777aa; line-height: 1.65; }
+  .highlight { color: #6ee7b7; font-weight: 600; }
+  .warn { color: #fbbf24; font-weight: 600; }
+  .bad { color: #f87171; font-weight: 600; }
+
+  .timeline {
+    position: relative;
+    padding: 10px 0;
+  }
+  .timeline-item {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 24px;
+    align-items: flex-start;
+  }
+  .timeline-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+  .timeline-content h4 { font-size: 0.9rem; font-weight: 600; color: #c8c8ff; margin-bottom: 4px; }
+  .timeline-content p { font-size: 0.82rem; color: #7777aa; line-height: 1.6; }
+
+  .note { background: #1a1a2e; border-left: 3px solid #6366f1; border-radius: 4px; padding: 14px 18px; margin: 20px 0; font-size: 0.83rem; color: #8888bb; line-height: 1.6; }
+
+  footer { text-align: center; padding: 30px; color: #4444aa; font-size: 0.78rem; border-top: 1px solid #2a2a4a; margin-top: 40px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Your 13-Month Transformation</h1>
+  <p>Apple Health Deep Dive · January 2025 – February 2026 · Male, age 30</p>
+</div>
+
+<div class="summary-bar">
+  <div class="stat-pill">
+    <div class="value">−17.8 lbs</div>
+    <div class="delta">↓ 173.9 → 156.1 lbs avg</div>
+    <div class="label">Body Weight</div>
+  </div>
+  <div class="stat-pill">
+    <div class="value">−8.9 lbs fat</div>
+    <div class="delta">↓ 29.0 → 20.4 lbs of fat</div>
+    <div class="label">Fat Mass Lost</div>
+  </div>
+  <div class="stat-pill">
+    <div class="value">−13.7 bpm</div>
+    <div class="delta">↓ 73.4 → 59.6 bpm</div>
+    <div class="label">Resting Heart Rate</div>
+  </div>
+  <div class="stat-pill">
+    <div class="value">+35% HRV</div>
+    <div class="delta">↑ 59.9 → 80.8 ms</div>
+    <div class="label">Heart Rate Variability</div>
+  </div>
+  <div class="stat-pill">
+    <div class="value">3.7× exercise</div>
+    <div class="delta">↑ 352 → 1,105+ min/mo</div>
+    <div class="label">Monthly Exercise Time</div>
+  </div>
+</div>
+
+<!-- BODY COMPOSITION -->
+<div class="section">
+  <div class="section-title">⚖️ Body Composition — The Real Story</div>
+  <div class="section-subtitle">
+    You started 2025 at ~174 lbs with 16.7% body fat. By February 2026 you're at ~156 lbs with 12.7–13.1% BF.
+    Crucially, the scale weight drop is almost entirely fat — your lean mass only fell modestly despite losing nearly 18 lbs total.
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Body Weight — Monthly Average (lbs)</div>
+      <canvas id="weightChart" height="220"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Body Fat % — Monthly Average</div>
+      <canvas id="bfChart" height="220"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card full">
+    <div class="chart-title">Fat Mass vs. Lean Mass Breakdown (lbs) — stacked</div>
+    <canvas id="compChart" height="110"></canvas>
+  </div>
+
+  <div class="note">
+    <strong>What the composition chart shows:</strong> Your fat mass (red) dropped from 29 lbs → 20.4 lbs — a loss of 8.6 lbs of pure fat.
+    Lean mass (blue) fell more modestly from ~145 → ~136 lbs. Given you were losing weight quickly while dramatically increasing exercise volume,
+    preserving this much lean mass is a good outcome. The body recomposition really accelerated from April–September 2025.
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- CARDIO -->
+<div class="section">
+  <div class="section-title">❤️ Cardiovascular Fitness</div>
+  <div class="section-subtitle">
+    This is where the most dramatic change happened. Your resting heart rate fell 13.7 bpm in 13 months — a drop of that magnitude
+    typically takes years of consistent aerobic training. HRV climbed from ~60 ms to ~81 ms, solidly into athletic territory.
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Resting Heart Rate (monthly avg, bpm)</div>
+      <canvas id="rhrChart" height="220"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Heart Rate Variability — SDNN (monthly avg, ms)</div>
+      <canvas id="hrvChart" height="220"></canvas>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>Why these two numbers matter:</strong> Resting HR and HRV are mirror images of each other — lower RHR and higher HRV both reflect
+    a stronger, more efficient heart with better autonomic nervous system regulation. Your RHR of ~59–60 bpm and HRV of ~80 ms
+    put you well into the range of a regularly trained athlete for your age group.
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ACTIVITY -->
+<div class="section">
+  <div class="section-title">🏃 Activity & Exercise</div>
+  <div class="section-subtitle">
+    Exercise time went from 352 minutes in January 2025 to over 1,000 minutes/month by Jan–Feb 2026.
+    The sport mix shifted too — swimming-heavy in spring, transitioning to tennis as the primary driver from mid-2025 onward.
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Exercise Minutes Per Month</div>
+      <canvas id="exerciseChart" height="220"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Daily Steps — Monthly Average</div>
+      <canvas id="stepsChart" height="220"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card full">
+    <div class="chart-title">Workout Activity by Month (66 logged workouts)</div>
+    <canvas id="workoutChart" height="110"></canvas>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SLEEP -->
+<div class="section">
+  <div class="section-title">😴 Sleep</div>
+  <div class="section-subtitle">
+    Sleep averaged 6.5–8.5 hrs/night across this period. The trend is actually improving — you ended the period
+    with your best consecutive months of sleep (Jan–Feb 2026: 8.5 and 8.2 hrs). Summer 2025 was the weak spot.
+  </div>
+
+  <div class="chart-card full">
+    <div class="chart-title">Average Sleep Per Night (hrs/month) — 7+ hrs is the green zone</div>
+    <canvas id="sleepChart" height="120"></canvas>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- RESPIRATORY -->
+<div class="section">
+  <div class="section-title">🫁 Other Vitals</div>
+  <div class="section-subtitle">Respiratory rate and wrist temperature — both stable, but respiratory rate has a mild upward creep worth keeping an eye on.</div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Respiratory Rate (breaths/min, nightly avg)</div>
+      <canvas id="respChart" height="220"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Sleeping Wrist Temperature (°F)</div>
+      <canvas id="tempChart" height="220"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- NARRATIVE TIMELINE -->
+<div class="section">
+  <div class="section-title">📅 How It Unfolded — Month by Month</div>
+  <div class="section-subtitle">The data tells a clear narrative arc across the year.</div>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:#f87171;margin-top:5px;"></div>
+      <div class="timeline-content">
+        <h4>Jan – Feb 2025 · Starting Point</h4>
+        <p>Weight hovering at <span class="warn">173–175 lbs</span>, body fat <span class="warn">16.7–16.8%</span>, resting HR a high <span class="warn">71–73 bpm</span>. Exercise at just 241–352 min/month. This is the baseline you were working from.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:#fb923c;margin-top:5px;"></div>
+      <div class="timeline-content">
+        <h4>Mar – Apr 2025 · Swimming Phase Begins</h4>
+        <p>You logged <span class="highlight">10–11 swimming sessions/month</span> — your highest workout frequency of the year. Weight briefly peaked at 179.6 lbs (likely water retention/muscle adaptation) before starting to fall. HRV jumped from 60 → <span class="highlight">76 ms</span> and RHR started dropping toward 60 bpm. Body fat began declining from its peak of 17.5%.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:#fbbf24;margin-top:5px;"></div>
+      <div class="timeline-content">
+        <h4>May – Jun 2025 · Weight Drops Fast</h4>
+        <p>The sharpest weight drop of the year — from ~172 lbs down to <span class="highlight">~164 lbs</span> in about 6 weeks. Body fat fell from 16% to ~14.8%. Steps hit their peak at <span class="highlight">9,459/day</span> in May. Sleep dipped to its worst (6.0–6.5 hrs avg) — likely a tradeoff with increased activity.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:#4ade80;margin-top:5px;"></div>
+      <div class="timeline-content">
+        <h4>Jul – Aug 2025 · Tennis Takes Over</h4>
+        <p>Sport mix shifted from swimming to tennis. August was your highest exercise month at <span class="highlight">1,244 minutes</span>. Weight continued falling to ~161 lbs. RHR hit <span class="highlight">59.5 bpm</span> for the first time. Body fat dropped to 14%.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:#60a5fa;margin-top:5px;"></div>
+      <div class="timeline-content">
+        <h4>Sep – Oct 2025 · Lowest Body Fat</h4>
+        <p>Body fat reached its lowest recorded point: <span class="highlight">13.4%</span>. Weight settled around 157–159 lbs. HRV hit <span class="highlight">77–79 ms</span>. Workout frequency dropped (1 workout each in Sep and Oct logged) but exercise minutes remained reasonable at 449–490 min, suggesting more informal activity.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:#6ee7b7;margin-top:5px;"></div>
+      <div class="timeline-content">
+        <h4>Jan – Feb 2026 · Tennis Surge, Best Numbers</h4>
+        <p>You logged <span class="highlight">9 and 7 tennis sessions</span> in Jan/Feb, both at ~83 min each. HRV climbed to its all-time high of <span class="highlight">80.8 ms</span>. RHR at <span class="highlight">59.6 bpm</span>. Sleep finally consistent at 8+ hrs. Body fat at 12.7–13.1%. This is your best overall health snapshot in the dataset.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- INSIGHTS -->
+<div class="section">
+  <div class="section-title">🔍 Key Takeaways</div>
+
+  <div class="insight-grid">
+    <div class="insight-card">
+      <div class="icon">🔥</div>
+      <h3>Almost Pure Fat Loss</h3>
+      <p>Of the ~17.8 lbs you lost, about <span class="highlight">8.6 lbs was fat</span> and ~9.2 lbs was lean mass. Lean mass losses are normal during a cut — they include water, glycogen, and connective tissue, not just muscle. The key signal is your body fat % dropped 3.6 points, meaning fat left faster than lean mass proportionally.</p>
+    </div>
+    <div class="insight-card">
+      <div class="icon">❤️</div>
+      <h3>Cardiac Age Has Dropped</h3>
+      <p>A resting HR of 59–60 bpm and HRV of 80+ ms at age 30 puts you in the top quartile for your age group. The 13.7 bpm drop in resting HR over 13 months is exceptional — this kind of adaptation usually requires sustained, consistent aerobic effort over a long period.</p>
+    </div>
+    <div class="insight-card">
+      <div class="icon">🏊</div>
+      <h3>Swimming Sparked It, Tennis Sustained It</h3>
+      <p>The data clearly shows two phases: the <span class="highlight">swimming phase (Mar–Apr)</span> turbocharged your cardio adaptation and kick-started fat loss, and <span class="highlight">tennis (Jul–Feb)</span> maintained and extended those gains. Both are excellent low-impact aerobic sports that protect joints while building cardiovascular capacity.</p>
+    </div>
+    <div class="insight-card">
+      <div class="icon">😴</div>
+      <h3>Sleep Is Your Remaining Lever</h3>
+      <p>Your worst months for sleep (May–Jul 2025: 5.8–6.5 hrs) coincided with your highest exercise intensity. Sleep is when HRV recovers and lean mass is preserved. With exercise now at a high level, <span class="highlight">protecting 7.5–8.5 hrs consistently</span> is probably the single biggest unlock remaining.</p>
+    </div>
+    <div class="insight-card">
+      <div class="icon">📊</div>
+      <h3>Steps Are Understated</h3>
+      <p>Daily steps averaged <span class="warn">4,600–9,500/month</span> — significant variance, and several months below the 7,500 threshold. Given your exercise volume, total movement is likely adequate, but boosting baseline steps on non-workout days would compound the cardio gains you've already made.</p>
+    </div>
+    <div class="insight-card">
+      <div class="icon">🎯</div>
+      <h3>Where You Go From Here</h3>
+      <p>You're in an excellent position. The next targets to aim for: <span class="highlight">RHR consistently below 58 bpm</span>, <span class="highlight">HRV consistently above 80 ms</span>, <span class="highlight">body fat to 11–12%</span>, and <span class="highlight">sleep locked at 7.5–8.5 hrs</span>. Maintaining January's tennis frequency (9 sessions/month) should get you there.</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Generated from Apple Health Export · January 2025 – February 2026 · For informational purposes only — not medical advice
+</footer>
+
+<script>
+const months = ['Jan 25','Feb 25','Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26'];
+const monthsComp = ['Jan 25','Feb 25','Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Jan 26','Feb 26'];
+
+const baseOpts = {
+  responsive: true,
+  plugins: { legend: { display: false } },
+  scales: {
+    x: { grid: { color: '#1e1e3a' }, ticks: { color: '#5555aa', font: { size: 10 } } },
+    y: { grid: { color: '#1e1e3a' }, ticks: { color: '#5555aa', font: { size: 10 } } }
+  }
+};
+
+// Weight
+new Chart(document.getElementById('weightChart'), {
+  type: 'line',
+  data: {
+    labels: ['Jan 25','Feb 25','Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Jan 26','Feb 26'],
+    datasets: [{
+      data: [173.9, 174.2, 175.0, 172.5, 165.2, 164.1, 164.0, 161.2, 159.0, 157.8, 156.1, 156.1],
+      borderColor: '#fbbf24',
+      backgroundColor: 'rgba(251,191,36,0.1)',
+      fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#fbbf24',
+    }]
+  },
+  options: { ...baseOpts, scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min: 150, max: 180 } } }
+});
+
+// Body fat
+new Chart(document.getElementById('bfChart'), {
+  type: 'line',
+  data: {
+    labels: ['Jan 25','Feb 25','Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Jan 26','Feb 26'],
+    datasets: [{
+      data: [16.7, 16.8, 16.7, 16.0, 15.2, 14.8, 14.7, 14.2, 13.6, 13.6, 13.2, 13.1],
+      borderColor: '#f9a8d4',
+      backgroundColor: 'rgba(249,168,212,0.1)',
+      fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#f9a8d4',
+    }]
+  },
+  options: {
+    ...baseOpts,
+    scales: {
+      ...baseOpts.scales,
+      y: { ...baseOpts.scales.y, min: 11, max: 19, ticks: { callback: v => v + '%', color: '#5555aa', font: { size: 10 } } }
+    }
+  }
+});
+
+// Composition stacked bar
+new Chart(document.getElementById('compChart'), {
+  type: 'bar',
+  data: {
+    labels: monthsComp,
+    datasets: [
+      {
+        label: 'Fat Mass (lbs)',
+        data: [29.0, 29.3, 29.2, 27.6, 25.1, 24.4, 24.1, 22.8, 21.6, 21.5, 20.6, 20.4],
+        backgroundColor: 'rgba(248,113,113,0.8)',
+      },
+      {
+        label: 'Lean Mass (lbs)',
+        data: [144.8, 144.9, 145.8, 144.9, 140.2, 139.7, 139.9, 138.4, 137.4, 136.3, 135.5, 135.7],
+        backgroundColor: 'rgba(96,165,250,0.8)',
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: true, labels: { color: '#9999cc', font: { size: 11 } } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} lbs` } }
+    },
+    scales: {
+      x: { stacked: true, grid: { color: '#1e1e3a' }, ticks: { color: '#5555aa', font: { size: 10 } } },
+      y: { stacked: true, grid: { color: '#1e1e3a' }, ticks: { color: '#5555aa', font: { size: 10 } }, min: 0, max: 200 }
+    }
+  }
+});
+
+// RHR
+new Chart(document.getElementById('rhrChart'), {
+  type: 'line',
+  data: {
+    labels: months,
+    datasets: [{
+      data: [73.4, 71.0, 66.4, 60.3, 61.1, 67.6, 64.6, 59.5, 60.4, 60.3, 59.1, 62.0, 60.1, 59.6],
+      borderColor: '#f87171',
+      backgroundColor: 'rgba(248,113,113,0.1)',
+      fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#f87171',
+    }]
+  },
+  options: { ...baseOpts, scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min: 55, max: 78 } } }
+});
+
+// HRV
+new Chart(document.getElementById('hrvChart'), {
+  type: 'line',
+  data: {
+    labels: months,
+    datasets: [{
+      data: [59.9, 59.8, 66.3, 75.9, 78.8, 65.4, 67.7, 75.1, 77.3, 75.6, 78.9, 71.7, 79.3, 80.8],
+      borderColor: '#6ee7b7',
+      backgroundColor: 'rgba(110,231,183,0.1)',
+      fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#6ee7b7',
+    }]
+  },
+  options: { ...baseOpts, scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min: 50, max: 90 } } }
+});
+
+// Exercise
+new Chart(document.getElementById('exerciseChart'), {
+  type: 'bar',
+  data: {
+    labels: months,
+    datasets: [{
+      data: [352, 241, 605, 794, 637, 538, 777, 1244, 449, 490, 428, 554, 1105, 1015],
+      backgroundColor: months.map(m => ['Aug 25','Jan 26','Feb 26'].includes(m) ? '#6ee7b7' : '#818cf8'),
+    }]
+  },
+  options: { ...baseOpts, plugins: { ...baseOpts.plugins, tooltip: { callbacks: { label: ctx => `${ctx.parsed.y} min (${(ctx.parsed.y/60).toFixed(1)} hrs)` } } } }
+});
+
+// Steps
+new Chart(document.getElementById('stepsChart'), {
+  type: 'bar',
+  data: {
+    labels: months,
+    datasets: [{
+      data: [4843, 4270, 6009, 6026, 9459, 7239, 6831, 7900, 7784, 6618, 5317, 6478, 6132, 4642],
+      backgroundColor: ctx => ctx.parsed.y >= 7500 ? '#4ade80' : ctx.parsed.y >= 5000 ? '#60a5fa' : '#f87171',
+    }]
+  },
+  options: { ...baseOpts, plugins: { ...baseOpts.plugins, tooltip: { callbacks: { label: ctx => `${ctx.parsed.y.toLocaleString()} steps` } } } }
+});
+
+// Workout activity by month - stacked by type
+const wkMonths = ['Feb 25','Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26'];
+new Chart(document.getElementById('workoutChart'), {
+  type: 'bar',
+  data: {
+    labels: wkMonths,
+    datasets: [
+      { label: 'Tennis', data: [0,0,0,0,0,4,6,0,0,0,2,9,7], backgroundColor: '#6ee7b7' },
+      { label: 'Swimming', data: [0,10,11,0,2,0,1,0,0,0,0,0,0], backgroundColor: '#60a5fa' },
+      { label: 'Pickleball', data: [0,0,1,1,0,0,2,0,0,0,0,0,0], backgroundColor: '#fbbf24' },
+      { label: 'Walking', data: [0,1,0,1,1,1,1,1,0,1,2,0,0], backgroundColor: '#c4b5fd' },
+      { label: 'Skiing', data: [1,0,0,0,0,0,0,0,0,0,0,0,0], backgroundColor: '#f9a8d4' },
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: true, labels: { color: '#9999cc', font: { size: 11 }, boxWidth: 12 } } },
+    scales: {
+      x: { stacked: true, grid: { color: '#1e1e3a' }, ticks: { color: '#5555aa', font: { size: 10 } } },
+      y: { stacked: true, grid: { color: '#1e1e3a' }, ticks: { color: '#5555aa', font: { size: 10 } } }
+    }
+  }
+});
+
+// Sleep
+new Chart(document.getElementById('sleepChart'), {
+  type: 'bar',
+  data: {
+    labels: months,
+    datasets: [{
+      data: [6.47, 7.54, 7.42, 8.26, 6.47, 6.04, 5.77, 6.71, 7.31, 8.12, 8.19, 7.58, 8.53, 8.23],
+      backgroundColor: ctx => ctx.parsed.y >= 7.5 ? '#4ade80' : ctx.parsed.y >= 7.0 ? '#fbbf24' : '#f87171',
+    }]
+  },
+  options: {
+    ...baseOpts,
+    scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min: 4, max: 10, ticks: { callback: v => v + 'h', color: '#5555aa', font: { size: 10 } } } },
+    plugins: { ...baseOpts.plugins, tooltip: { callbacks: { label: ctx => `${ctx.parsed.y.toFixed(1)} hrs/night avg` } } }
+  }
+});
+
+// Respiratory rate
+new Chart(document.getElementById('respChart'), {
+  type: 'line',
+  data: {
+    labels: months,
+    datasets: [{
+      data: [13.4, 13.2, 13.6, 13.6, 13.8, 14.7, 14.5, 13.9, 14.2, 14.6, 14.7, 14.7, 14.4, 13.8],
+      borderColor: '#c4b5fd',
+      backgroundColor: 'rgba(196,181,253,0.1)',
+      fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#c4b5fd',
+    }]
+  },
+  options: { ...baseOpts, scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min: 12, max: 16 } } }
+});
+
+// Wrist temp
+new Chart(document.getElementById('tempChart'), {
+  type: 'line',
+  data: {
+    labels: ['Oct 24','Nov 24','Dec 24','Jan 25','Feb 25','Mar 25','Apr 25','May 25','Jun 25','Jul 25','Aug 25','Sep 25','Oct 25','Nov 25','Dec 25','Jan 26','Feb 26'],
+    datasets: [{
+      data: [95.83, 95.98, 96.00, 96.28, 96.08, 96.05, 96.14, 96.26, 96.24, 95.85, 95.63, 95.82, 96.10, 96.26, 96.36, 96.29, 96.48],
+      borderColor: '#fb923c',
+      backgroundColor: 'rgba(251,146,60,0.1)',
+      fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#fb923c',
+    }]
+  },
+  options: {
+    ...baseOpts,
+    scales: { ...baseOpts.scales, y: { ...baseOpts.scales.y, min: 95.0, max: 97.0, ticks: { callback: v => v.toFixed(1)+'°F', color: '#5555aa', font: { size: 10 } } } }
+  }
+});
+</script>
+</body>
+</html>

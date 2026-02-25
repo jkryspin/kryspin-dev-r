@@ -69,6 +69,12 @@
             gap: 10px;
         }
 
+        .hints-used {
+            font-size: 1.2rem;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
         .timer {
             font-size: 1.2rem;
             color: #667eea;
@@ -135,6 +141,48 @@
             100% { transform: scale(1); }
         }
 
+        @keyframes hintPulse {
+            0% { 
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+            }
+            50% { 
+                transform: scale(1.1);
+                box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
+            }
+            100% { 
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+            }
+        }
+
+        .grid-cell.hint-highlight {
+            background: #ffeaa7;
+            border-color: #fdcb6e;
+            animation: hintPulse 1s ease infinite;
+        }
+
+        .hint-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            font-size: 1.2rem;
+            color: #333;
+            z-index: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .hint-message.show {
+            opacity: 1;
+        }
+
         .word-list {
             background: #f8f9fa;
             padding: 20px;
@@ -185,6 +233,18 @@
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .hint-btn {
+            background: linear-gradient(135deg, #f39c12, #e74c3c);
+            position: relative;
+        }
+
+        .hint-level {
+            display: inline-block;
+            margin-left: 5px;
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
 
         .win-message {
@@ -244,6 +304,7 @@
         <div class="game-info">
             <div class="timer">⏱️ Time: <span id="timer">00:00</span></div>
             <div class="score">🌟 Words Found: <span id="score">0/8</span></div>
+            <div class="hints-used">💡 Hints Used: <span id="hintsUsed">0</span></div>
         </div>
         
         <div class="grid-container">
@@ -261,15 +322,18 @@
         
         <div class="controls">
             <button class="btn" onclick="newGame()">New Game</button>
-            <button class="btn" onclick="showHint()">Hint</button>
+            <button class="btn hint-btn" onclick="showHint()">Hint<span class="hint-level" id="hintLevel">(Level 1)</span></button>
         </div>
     </div>
     
     <div class="win-message" id="winMessage">
         <h2>🎉 Congratulations!</h2>
         <p>You found all the words in <span id="finalTime"></span>!</p>
+        <p>Hints used: <span id="finalHints"></span></p>
         <button class="btn" onclick="newGame()">Play Again</button>
     </div>
+    
+    <div class="hint-message" id="hintMessage"></div>
 
     <script>
         const GRID_SIZE = 12;
@@ -284,6 +348,9 @@
         let wordPositions = {};
         let startTime;
         let timerInterval;
+        let hintsUsed = 0;
+        let currentHintLevel = 0;
+        let lastHintedWord = null;
         
         function initializeGrid() {
             grid = Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(''));
@@ -386,9 +453,7 @@
             const row = parseInt(cell.dataset.row);
             const col = parseInt(cell.dataset.col);
             
-            if (cell.classList.contains('found')) {
-                return;
-            }
+            // Allow clicking on found cells - they can be part of multiple words
             
             if (cell.classList.contains('selected')) {
                 // Deselect
@@ -470,21 +535,80 @@
             clearInterval(timerInterval);
             const finalTime = document.getElementById('timer').textContent;
             document.getElementById('finalTime').textContent = finalTime;
+            document.getElementById('finalHints').textContent = hintsUsed;
             document.getElementById('winMessage').classList.add('show');
         }
         
         function showHint() {
-            // Find a word that hasn't been found yet
             const remainingWords = WORDS.filter(word => !foundWords.has(word));
-            if (remainingWords.length > 0) {
-                const hintWord = remainingWords[0];
-                const firstPos = wordPositions[hintWord][0];
-                const cell = document.querySelector(`[data-row="${firstPos.row}"][data-col="${firstPos.col}"]`);
-                cell.style.animation = 'foundPulse 1s ease 3';
-                setTimeout(() => {
-                    cell.style.animation = '';
-                }, 3000);
+            if (remainingWords.length === 0) {
+                showHintMessage('All words found! 🎉');
+                return;
             }
+
+            // Clear previous hints
+            document.querySelectorAll('.hint-highlight').forEach(cell => {
+                cell.classList.remove('hint-highlight');
+            });
+
+            // Determine which word to hint
+            let hintWord;
+            if (lastHintedWord && remainingWords.includes(lastHintedWord)) {
+                // Continue hinting the same word with increased level
+                hintWord = lastHintedWord;
+                currentHintLevel++;
+            } else {
+                // Start hinting a new word
+                hintWord = remainingWords[0];
+                currentHintLevel = 1;
+                lastHintedWord = hintWord;
+            }
+
+            const positions = wordPositions[hintWord];
+            
+            // Apply hint based on level
+            switch (currentHintLevel) {
+                case 1:
+                    // Level 1: Highlight first letter
+                    highlightCell(positions[0]);
+                    showHintMessage(`First letter of "${hintWord}" highlighted`);
+                    break;
+                case 2:
+                    // Level 2: Highlight first and last letter
+                    highlightCell(positions[0]);
+                    highlightCell(positions[positions.length - 1]);
+                    showHintMessage(`First and last letters of "${hintWord}" highlighted`);
+                    break;
+                case 3:
+                    // Level 3: Highlight entire word
+                    positions.forEach(pos => highlightCell(pos));
+                    showHintMessage(`All letters of "${hintWord}" highlighted`);
+                    currentHintLevel = 0; // Reset for next word
+                    lastHintedWord = null;
+                    break;
+            }
+
+            hintsUsed++;
+            document.getElementById('hintsUsed').textContent = hintsUsed;
+            
+            // Update hint button level display
+            const nextLevel = currentHintLevel === 3 ? 1 : currentHintLevel + 1;
+            document.getElementById('hintLevel').textContent = `(Level ${nextLevel})`;
+        }
+
+        function highlightCell(position) {
+            const cell = document.querySelector(`[data-row="${position.row}"][data-col="${position.col}"]`);
+            cell.classList.add('hint-highlight');
+        }
+
+        function showHintMessage(message) {
+            const hintMsg = document.getElementById('hintMessage');
+            hintMsg.textContent = message;
+            hintMsg.classList.add('show');
+            
+            setTimeout(() => {
+                hintMsg.classList.remove('show');
+            }, 2000);
         }
         
         function newGame() {
@@ -493,13 +617,23 @@
             foundWords.clear();
             wordPositions = {};
             clearInterval(timerInterval);
+            hintsUsed = 0;
+            currentHintLevel = 0;
+            lastHintedWord = null;
             
             // Hide win message
             document.getElementById('winMessage').classList.remove('show');
             
+            // Clear any remaining hints
+            document.querySelectorAll('.hint-highlight').forEach(cell => {
+                cell.classList.remove('hint-highlight');
+            });
+            
             // Reset UI
             document.getElementById('timer').textContent = '00:00';
             document.getElementById('score').textContent = '0/8';
+            document.getElementById('hintsUsed').textContent = '0';
+            document.getElementById('hintLevel').textContent = '(Level 1)';
             
             // Generate new game
             initializeGrid();
