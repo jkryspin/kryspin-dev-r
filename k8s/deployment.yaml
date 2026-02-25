@@ -71,21 +71,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - kryspin.dev
-        - www.kryspin.dev
+        - r.kryspin.dev
       secretName: kryspin-dev-r-tls-cert
   rules:
-    - host: kryspin.dev
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: kryspin-dev-r
-                port:
-                  number: 80
-    - host: www.kryspin.dev
+    - host: r.kryspin.dev
       http:
         paths:
           - path: /
